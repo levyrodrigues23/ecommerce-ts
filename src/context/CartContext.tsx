@@ -5,6 +5,8 @@ interface CartContextData {
   cart: CartProps[];
   cartAmount: number;
   addItemCart: (newItem: ProductProps) => void;
+  removeItemCart: (product: CartProps) => void;
+  total: string;
 }
 
 interface CartProps {
@@ -25,6 +27,7 @@ export const CartContext = createContext({} as CartContextData);
 
 function CartProvider({ children }: CartProviderProps) {
   const [cart, setCart] = useState<CartProps[]>([]);
+  const [total, setTotal] = useState("");
 
   //adiciona no carrinho
   function addItemCart(newItem: ProductProps) {
@@ -38,6 +41,8 @@ function CartProvider({ children }: CartProviderProps) {
       cartList[indexItem].total =
         cartList[indexItem].amount * cartList[indexItem].price;
       setCart(cartList);
+      totalResultCart(cartList);
+      //atualiza o total do carrinho
       return;
     }
 
@@ -49,6 +54,7 @@ function CartProvider({ children }: CartProviderProps) {
     };
 
     setCart((products) => [...products, data]);
+    totalResultCart([...cart, data]);
   }
 
   function removeItemCart(product: CartProps) {
@@ -56,10 +62,19 @@ function CartProvider({ children }: CartProviderProps) {
 
     if (cart[indexItem]?.amount > 1) {
       //diminuir a quantidade do item
+      let cartList = cart;
+      cartList[indexItem].amount = cartList[indexItem].amount - 1;
+      cartList[indexItem].total = cartList[indexItem].amount - cartList[indexItem].price;
+
+setCart(cartList);
+totalResultCart(cartList);
+return
+
     }
 
     const removeItem = cart.filter((item) => item.id !== product.id);
     setCart(removeItem);
+    totalResultCart(removeItem);
   }
 
   function totalResultCart(items: CartProps[]) {
@@ -71,12 +86,12 @@ function CartProvider({ children }: CartProviderProps) {
       style: "currency",
       currency: "BRL",
     });
-    return resultFormated(format);
+    setTotal(format);
   }
 
   return (
     <CartContext.Provider
-      value={{ cart, cartAmount: cart.length, addItemCart }}
+      value={{ cart, cartAmount: cart.length, addItemCart, removeItemCart, total }}
     >
       {children}
     </CartContext.Provider>

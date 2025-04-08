@@ -3,7 +3,7 @@ import { CartContext } from "../../context/CartContext";
 import { Link } from "react-router";
 
 const Cart = () => {
-const {cart} = useContext(CartContext)
+const {cart, total, addItemCart, removeItemCart} = useContext(CartContext);
 
   return (
     <div className="w-full max-w-7xl mx-auto ">
@@ -28,13 +28,13 @@ const {cart} = useContext(CartContext)
      <strong>{item.price}</strong>
   
   <div className="flex items-center justify-center gap-3">
-    <button className="bg-slate-600  px-2 rounded text-white font-medium flex items-center justify-center">
+    <button onClick={()=> removeItemCart(item)} className="bg-slate-600  px-2 rounded text-white font-medium flex items-center justify-center">
       -
     </button>
     <button className="bg-slate-600  px-2 rounded text-white font-medium flex items-center justify-center">
       {item.amount}
     </button>
-    <button className="bg-slate-600  px-2 rounded text-white font-medium flex items-center justify-center">
+    <button onClick={() => addItemCart(item)} className="bg-slate-600  px-2 rounded text-white font-medium flex items-center justify-center">
       +
     </button>
   </div>
@@ -51,7 +51,7 @@ const {cart} = useContext(CartContext)
 
  {cart.length !== 0 &&(
     <p className="font-bold mt-4">
-    Total: R$: 1000
+    Total: {total}
    </p>
  )}
       
