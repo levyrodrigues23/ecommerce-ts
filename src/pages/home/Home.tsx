@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import api from "../../services/api";
 import { CartContext } from "../../context/CartContext";
 import toast from "react-hot-toast";
+import { Link } from "react-router";
 
 export interface ProductProps {
   id: number;
@@ -48,12 +49,15 @@ const Home = () => {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
         {products.map((product) => (
           <section key={product.id} className="w-full">
+            
+            <Link to={`/product/${product.id}`} className="flex flex-col items-center">
             <img
               className="w-full rounded-lg max-h-70 mb-2"
               src={product.image}
               alt={product.title}
             />
             <p className="font-medium mt-1 mb-2">{product.title}</p>
+            </Link>
             <div className="flex gap-3 items-center">
               <strong className="text-zinc-700/90">
                 {product.price.toLocaleString("pt-BR", {
